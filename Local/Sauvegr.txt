@@ -1,0 +1,63 @@
+<?php
+session_start();
+
+$bdd = new PDO('mysql:host=localhost;dbname=nitoco','nitoco','5iRG51wvaLyATWOgzkqS');
+
+if(isset($_GET['ID']) AND $_GET['ID'] > 0)
+{
+    $getid = intval($_GET['ID']);
+    $requser = $bdd->prepare('SELECT * FROM utilisateurs WHERE ID = ?');
+    $requser->execute(array($getid));
+    $userinfo = $requser->fetch();
+
+?>
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta charset ="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>UA_CO2</title>
+	<meta name="description" content="Venez lire les valeurs des capteurs de CO2 de l'UA Angers !">
+
+	<link rel="stylesheet" href="bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="Bienvenue.css"> 
+    <link rel="shortcut icon" href="ua.jpg">
+    
+</head>
+
+<header>
+    
+</header>
+<body style="background: url(Fond_Angers.jpg);background-size: cover;">
+    
+    <section>
+        <div align="center">
+            <h2>Profil de <?php echo $userinfo['username'];?></h2>
+                <?php
+                if(isset($_SESSION['ID']) AND $userinfo['ID'] == $_SESSION['ID'])
+                {
+                ?>
+                <a href="EditionProfil.php">Editer mon profil</a>
+                <a href="Deconnexion.php">Se déconnecter</a>
+                <?php
+                }
+                else
+                {
+                    echo "Vous n'êtes pas connecté au profil de ".$userinfo['username'];
+                }
+                ?>
+        </div>
+    </section>
+<!-- JS -->
+    <script src="bootstrap.min.js"></script>
+    <script src="Bienvenue.js"></script>
+</body>
+<footer>
+</footer>
+
+
+</html>
+<?php
+}
+?>
